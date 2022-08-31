@@ -48,12 +48,6 @@ func (rm *MachineRouteManager) GetMachines(w http.ResponseWriter, r *http.Reques
 	json.NewEncoder(w).Encode(machines)
 }
 
-type MarkMachineRequest struct {
-	MachineId string       `json:"machineId"`
-	UserId    string       `json:"userId"`
-	Status    types.Status `json:"status"`
-}
-
 func (rm *MachineRouteManager) MarkMachine(w http.ResponseWriter, r *http.Request) {
 	var machine types.Machine
 	json.NewDecoder(r.Body).Decode(&machine)
