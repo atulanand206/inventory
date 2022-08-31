@@ -23,8 +23,8 @@ func NewBuildingRouteManager(buildingConfig store.StoreConfig, routeManager *Rou
 func (rm *BuildingRouteManager) RoutesBuilding() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/buildings/init", rm.handler.postChain.Handler(rm.Create))
-	router.HandleFunc("/buildings/users/add", rm.handler.postChain.Handler(rm.Create))
-	router.HandleFunc("/buildings/users/remove", rm.handler.postChain.Handler(rm.Create))
+	router.HandleFunc("/buildings/users/add", rm.handler.postChain.Handler(rm.Add))
+	router.HandleFunc("/buildings/users/remove", rm.handler.postChain.Handler(rm.Remove))
 	return router
 }
 
@@ -47,4 +47,10 @@ type NewRemoveUserRequest struct {
 }
 
 func (rm *BuildingRouteManager) Create(w http.ResponseWriter, r *http.Request) {
+}
+
+func (rm *BuildingRouteManager) Add(w http.ResponseWriter, r *http.Request) {
+}
+
+func (rm *BuildingRouteManager) Remove(w http.ResponseWriter, r *http.Request) {
 }
