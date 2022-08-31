@@ -1,11 +1,13 @@
 package types
 
+//
 type User struct {
 	Id    string `json:"id" bson:"id"`
 	Name  string `json:"name" bson:"name"`
 	Phone string `json:"phone" bson:"phone"`
 }
 
+//
 type Building struct {
 	Id   string `json:"id" bson:"id"`
 	Name string `json:"name" bson:"name"`
@@ -28,6 +30,7 @@ func (s SharingStatus) String() string {
 	return "unknown"
 }
 
+//
 type RoomSharing struct {
 	BuildingId    string        `json:"buildingId" bson:"buildingId"`
 	RoomNo        int           `json:"roomNo" bson:"roomNo"`
@@ -51,6 +54,7 @@ func (s OccStatus) String() string {
 	return "unknown"
 }
 
+//
 type BuildingBed struct {
 	BuildingId      string    `json:"buildingId" bson:"buildingId"`
 	BedId           string    `json:"bedId" bson:"bedId"`
@@ -59,6 +63,7 @@ type BuildingBed struct {
 	OccupancyStatus OccStatus `json:"occupancyStatus" bson:"occupancyStatus"`
 }
 
+//
 type BedUser struct {
 	BedId  string `json:"bedId" bson:"bedId"`
 	UserId string `json:"userId" bson:"userId"`
@@ -84,12 +89,14 @@ func (s Status) String() string {
 	return "unknown"
 }
 
+//
 type Machine struct {
 	Name   string `json:"name" bson:"name"`
 	No     int    `json:"id" bson:"id"`
 	Status Status `json:"status" bson:"status"`
 }
 
+//
 type Usage struct {
 	MachineId string `json:"machineId" bson:"machineId"`
 	BedId     string `json:"bedId" bson:"bedId"`

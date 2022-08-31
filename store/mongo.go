@@ -11,7 +11,7 @@ type StoreConfig struct {
 }
 
 type mongoStore struct {
-	client mongo.DBConn
+	Client mongo.DBConn
 }
 
 func Data(config StoreConfig) mongo.DBConn {

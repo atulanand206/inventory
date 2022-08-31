@@ -4,19 +4,20 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/atulanand206/inventory/core"
 	"github.com/atulanand206/inventory/store"
 	"github.com/atulanand206/inventory/types"
 )
 
 type MachineRouteManager struct {
 	RouteManager
-	dataStore store.MachineStore
+	service core.MachineService
 }
 
-func NewRM(config store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
+func NewMachineRouteManager(config store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
 	return &MachineRouteManager{
 		RouteManager: *routeManager,
-		dataStore:    store.NewMachineStoreConn(config),
+		service:      core.NewMachineService(config),
 	}
 }
 
@@ -31,8 +32,8 @@ func (rm *MachineRouteManager) RoutesMachine() *http.ServeMux {
 func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Request) {
 	var machines []types.Machine
 	json.NewDecoder(r.Body).Decode(&machines)
-	rm.dataStore.CreateMachines(machines)
-	machines, err := rm.dataStore.GetMachines()
+	rm.service.CreateMachines(machines)
+	machines, err := rm.service.GetMachines()
 	if err != nil {
 		return
 	}
@@ -40,7 +41,7 @@ func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Req
 }
 
 func (rm *MachineRouteManager) GetMachines(w http.ResponseWriter, r *http.Request) {
-	machines, err := rm.dataStore.GetMachines()
+	machines, err := rm.service.GetMachines()
 	if err != nil {
 		return
 	}
@@ -56,8 +57,8 @@ type MarkMachineRequest struct {
 func (rm *MachineRouteManager) MarkMachine(w http.ResponseWriter, r *http.Request) {
 	var machine types.Machine
 	json.NewDecoder(r.Body).Decode(&machine)
-	rm.dataStore.MarkMachine(machine)
-	machines, err := rm.dataStore.GetMachines()
+	rm.service.MarkMachine(machine)
+	machines, err := rm.service.GetMachines()
 	if err != nil {
 		return
 	}

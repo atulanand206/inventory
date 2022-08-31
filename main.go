@@ -14,7 +14,7 @@ func main() {
 	godotenv.Load()
 	fmt.Println(os.Getenv("CORS_ORIGIN"))
 	routeManager := routes.New()
-	machineRouteManager := routes.NewRM(store.StoreConfig{
+	machineRouteManager := routes.NewMachineRouteManager(store.StoreConfig{
 		DbName:    os.Getenv("DB_NAME"),
 		TableName: os.Getenv("TABLE_NAME_MACHINE"),
 		Local:     os.Getenv("LOCAL") == "true",

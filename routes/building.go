@@ -3,19 +3,20 @@ package routes
 import (
 	"net/http"
 
+	"github.com/atulanand206/inventory/core"
 	"github.com/atulanand206/inventory/store"
 	"github.com/atulanand206/inventory/types"
 )
 
 type BuildingRouteManager struct {
 	RouteManager
-	dataStore store.BuildingStore
+	service core.BuildingService
 }
 
 func NewBuildingRouteManager(config store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
 	return &BuildingRouteManager{
 		RouteManager: *routeManager,
-		dataStore:    store.NewMachineStoreConn(config),
+		service:      store.NewBuildingStoreConn(config),
 	}
 }
 

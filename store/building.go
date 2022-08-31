@@ -1,17 +1,14 @@
 package store
 
-type buildingStore struct {
+type BuildingStore struct {
 	mongoStore
 	Collection string
 }
 
-type BuildingStore interface {
-}
-
-func NewBuildingStoreConn(config StoreConfig) BuildingStore {
-	return &buildingStore{
+func NewBuildingStoreConn(config StoreConfig) *BuildingStore {
+	return &BuildingStore{
 		mongoStore: mongoStore{
-			client: Data(config),
+			Client: Data(config),
 		},
 		Collection: config.TableName,
 	}
