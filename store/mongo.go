@@ -28,3 +28,15 @@ func Data(config StoreConfig) mongo.DBConn {
 	}
 	return mongo.NewDb(config.DbName)
 }
+
+func StoreConfigs(dbName string, collections []string, local bool) map[string]StoreConfig {
+	var storeConfigs = make(map[string]StoreConfig)
+	for _, collection := range collections {
+		storeConfigs[collection] = StoreConfig{
+			DbName:    dbName,
+			TableName: collection,
+			Local:     local,
+		}
+	}
+	return storeConfigs
+}

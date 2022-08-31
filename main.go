@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -12,12 +11,12 @@ import (
 
 func main() {
 	godotenv.Load()
-	fmt.Println(os.Getenv("CORS_ORIGIN"))
 	routeManager := routes.New()
-	machineRouteManager := routes.NewMachineRouteManager(store.StoreConfig{
-		DbName:    os.Getenv("DB_NAME"),
-		TableName: os.Getenv("TABLE_NAME_MACHINE"),
-		Local:     os.Getenv("LOCAL") == "true",
-	}, routeManager)
+	storeConfigs := store.StoreConfigs(os.Getenv("DB_NAME"), collections(), os.Getenv("LOCAL") == "true")
+	machineRouteManager := routes.NewMachineRouteManager(storeConfigs["machines"], routeManager)
 	http.ListenAndServe(":"+os.Getenv("PORT"), machineRouteManager.RoutesMachine())
+}
+
+func collections() []string {
+	return []string{"user", "buildings", "room_sharing", "building_bed", "bed_user", "machines", "usages"}
 }

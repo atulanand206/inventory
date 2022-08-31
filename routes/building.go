@@ -13,10 +13,10 @@ type BuildingRouteManager struct {
 	service core.BuildingService
 }
 
-func NewBuildingRouteManager(config store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
+func NewBuildingRouteManager(buildingConfig store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
 	return &BuildingRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewBuildingService(config),
+		service:      core.NewBuildingService(buildingConfig),
 	}
 }
 

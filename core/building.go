@@ -9,8 +9,8 @@ type buildingService struct {
 type BuildingService interface {
 }
 
-func NewBuildingService(config store.StoreConfig) BuildingService {
+func NewBuildingService(buildingConfig store.StoreConfig) BuildingService {
 	return &buildingService{
-		buildingStore: store.NewStoreConn(config),
+		buildingStore: store.NewStoreConn(buildingConfig),
 	}
 }
