@@ -21,9 +21,9 @@ func (s Status) String() string {
 }
 
 type Machine struct {
-	Name   string `json:"name"`
-	No     int    `json:"id"`
-	Status Status `json:"status"`
+	Name   string `json:"name" bson:"name"`
+	No     int    `json:"id" bson:"id"`
+	Status Status `json:"status" bson:"status"`
 }
 
 type Inventory struct {

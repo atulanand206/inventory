@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	net "github.com/atulanand206/go-network"
-	"github.com/atulanand206/inventory/store"
 )
 
 type RequestHandler struct {
@@ -14,8 +13,7 @@ type RequestHandler struct {
 }
 
 type RouteManager struct {
-	handler   *RequestHandler
-	dataStore store.DataStore
+	handler *RequestHandler
 }
 
 func New() *RouteManager {
@@ -33,7 +31,6 @@ func New() *RouteManager {
 			postChain: &postChain,
 			putChain:  &putChain,
 		},
-		dataStore: store.New(),
 	}
 	return routeManager
 }

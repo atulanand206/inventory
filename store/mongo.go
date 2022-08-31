@@ -1,18 +1,22 @@
 package store
 
-import "github.com/atulanand206/inventory/types"
+import (
+	mongo "github.com/atulanand206/go-mongo"
+)
+
+type StoreConfig struct {
+	DbName    string
+	TableName string
+	Local     bool
+}
 
 type mongoStore struct {
+	client mongo.DBConn
 }
 
-func NewMongoStore() DataStore {
-	return &mongoStore{}
-}
-
-func (m *mongoStore) GetMachines() []types.Machine {
-	return []types.Machine{}
-}
-
-func (m *mongoStore) MarkMachine(machine types.Machine) []types.Machine {
-	return []types.Machine{}
+func Data(config StoreConfig) mongo.DBConn {
+	if config.Local {
+		return mongo.NewMockDb()
+	}
+	return mongo.NewDb(config.DbName)
 }

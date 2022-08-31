@@ -1,6 +1,10 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/atulanand206/go-mongo v0.1.4 h1:LlMtEUVkw00rsoIiKYMoRi2jRhN8uoBvz9GY6qtuV2Y=
 github.com/atulanand206/go-mongo v0.1.4/go.mod h1:K49Bi+77bBhceP035yLuQTzFEjtkrozY6tFHnSCmOak=
+github.com/atulanand206/go-mongo v0.1.5 h1:XB9SaVpCabsDHGc5PlgDqG5lhqxOyGdSwJd85qWZpuM=
+github.com/atulanand206/go-mongo v0.1.5/go.mod h1:K49Bi+77bBhceP035yLuQTzFEjtkrozY6tFHnSCmOak=
+github.com/atulanand206/go-mongo v0.1.6 h1:KrwQMZvHNYbQH2GoBJwS6HwNWxSqsMxcrdO+hUPlzJw=
+github.com/atulanand206/go-mongo v0.1.6/go.mod h1:K49Bi+77bBhceP035yLuQTzFEjtkrozY6tFHnSCmOak=
 github.com/atulanand206/go-network v0.1.5 h1:x0uPbklmrVA1SpP5XFhE9u5kC41lsbdrvZSsXFfLbTo=
 github.com/atulanand206/go-network v0.1.5/go.mod h1:3APhuP4lZa7fB3oaBp1c/IsR2bZ4u1GoWPtOGRPTC6E=
 github.com/aws/aws-sdk-go v1.34.28 h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=
