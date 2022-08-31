@@ -12,19 +12,19 @@ type BuildingRouteManager struct {
 	service core.BuildingService
 }
 
-func NewBuildingRouteManager(buildingConfig store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
+func NewBuildingRouteManager(buildingConfig store.StoreConfig, userConfig store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
 	return &BuildingRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewBuildingService(buildingConfig),
+		service:      core.NewBuildingService(buildingConfig, userConfig),
 	}
 }
 
-func (rm *BuildingRouteManager) RoutesBuilding() *http.ServeMux {
-	router := http.NewServeMux()
-	router.HandleFunc("/buildings/init", rm.handler.postChain.Handler(rm.Create))
-	router.HandleFunc("/buildings/users/add", rm.handler.postChain.Handler(rm.Add))
-	router.HandleFunc("/buildings/users/remove", rm.handler.postChain.Handler(rm.Remove))
-	return router
+func (rm *BuildingRouteManager) RoutesBuilding() map[string]http.HandlerFunc {
+	var routes = make(map[string]http.HandlerFunc)
+	routes["/buildings/init"] = rm.handler.postChain.Handler(rm.Create)
+	routes["/buildings/users/add"] = rm.handler.postChain.Handler(rm.Add)
+	routes["/buildings/users/remove"] = rm.handler.postChain.Handler(rm.Remove)
+	return routes
 }
 
 func (rm *BuildingRouteManager) Create(w http.ResponseWriter, r *http.Request) {

@@ -21,12 +21,12 @@ func NewMachineRouteManager(machineConfig store.StoreConfig, routeManager *Route
 	}
 }
 
-func (rm *MachineRouteManager) RoutesMachine() *http.ServeMux {
-	router := http.NewServeMux()
-	router.HandleFunc("/machines/init", rm.handler.postChain.Handler(rm.CreateMachines))
-	router.HandleFunc("/machines", rm.handler.postChain.Handler(rm.GetMachines))
-	router.HandleFunc("/machines/mark", rm.handler.postChain.Handler(rm.MarkMachine))
-	return router
+func (rm *MachineRouteManager) RoutesMachine() map[string]http.HandlerFunc {
+	var routes = make(map[string]http.HandlerFunc)
+	routes["/machines/init"] = rm.handler.postChain.Handler(rm.CreateMachines)
+	routes["/machines"] = rm.handler.postChain.Handler(rm.GetMachines)
+	routes["/machines/mark"] = rm.handler.postChain.Handler(rm.MarkMachine)
+	return routes
 }
 
 func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Request) {

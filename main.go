@@ -13,8 +13,18 @@ func main() {
 	godotenv.Load()
 	routeManager := routes.New()
 	storeConfigs := store.StoreConfigs(os.Getenv("DB_NAME"), collections(), os.Getenv("LOCAL") == "true")
+	router := http.NewServeMux()
 	machineRouteManager := routes.NewMachineRouteManager(storeConfigs["machines"], routeManager)
-	http.ListenAndServe(":"+os.Getenv("PORT"), machineRouteManager.RoutesMachine())
+	buildingRouteManager := routes.NewBuildingRouteManager(storeConfigs["buildings"], storeConfigs["users"], routeManager)
+	handle(router, machineRouteManager.RoutesMachine())
+	handle(router, buildingRouteManager.RoutesBuilding())
+	http.ListenAndServe(":"+os.Getenv("PORT"), router)
+}
+
+func handle(router *http.ServeMux, routes map[string]http.HandlerFunc) {
+	for path, handler := range routes {
+		router.HandleFunc(path, handler)
+	}
 }
 
 func collections() []string {

@@ -3,14 +3,16 @@ package core
 import "github.com/atulanand206/inventory/store"
 
 type buildingService struct {
-	buildingStore *store.MongoStore
+	buildingStore store.BuildingStore
+	userStore     store.UserStore
 }
 
 type BuildingService interface {
 }
 
-func NewBuildingService(buildingConfig store.StoreConfig) BuildingService {
+func NewBuildingService(buildingConfig store.StoreConfig, userConfig store.StoreConfig) BuildingService {
 	return &buildingService{
-		buildingStore: store.NewStoreConn(buildingConfig),
+		buildingStore: store.NewBuildingStore(buildingConfig),
+		userStore:     store.NewUserStore(userConfig),
 	}
 }
