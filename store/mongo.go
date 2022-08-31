@@ -10,8 +10,16 @@ type StoreConfig struct {
 	Local     bool
 }
 
-type mongoStore struct {
-	Client mongo.DBConn
+type MongoStore struct {
+	Client     mongo.DBConn
+	Collection string
+}
+
+func NewStoreConn(config StoreConfig) *MongoStore {
+	return &MongoStore{
+		Client:     Data(config),
+		Collection: config.TableName,
+	}
 }
 
 func Data(config StoreConfig) mongo.DBConn {

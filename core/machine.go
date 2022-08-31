@@ -8,7 +8,7 @@ import (
 )
 
 type machineService struct {
-	machineStore *store.MachineStore
+	machineStore *store.MongoStore
 }
 
 type MachineService interface {
@@ -19,7 +19,7 @@ type MachineService interface {
 
 func NewMachineService(config store.StoreConfig) MachineService {
 	return &machineService{
-		machineStore: store.NewMachineStoreConn(config),
+		machineStore: store.NewStoreConn(config),
 	}
 }
 

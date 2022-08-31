@@ -16,7 +16,7 @@ type BuildingRouteManager struct {
 func NewBuildingRouteManager(config store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
 	return &BuildingRouteManager{
 		RouteManager: *routeManager,
-		service:      store.NewBuildingStoreConn(config),
+		service:      core.NewBuildingService(config),
 	}
 }
 
