@@ -4,6 +4,8 @@ import (
 	mongo "github.com/atulanand206/go-mongo"
 )
 
+var localDatabase = mongo.NewMockDb()
+
 type StoreConfig struct {
 	DbName    string
 	TableName string
@@ -24,7 +26,7 @@ func NewStoreConn(config StoreConfig) *MongoStore {
 
 func Data(config StoreConfig) mongo.DBConn {
 	if config.Local {
-		return mongo.NewMockDb()
+		return localDatabase
 	}
 	return mongo.NewDb(config.DbName)
 }
