@@ -1,10 +1,12 @@
 package routes
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/atulanand206/inventory/core"
 	"github.com/atulanand206/inventory/store"
+	"github.com/atulanand206/inventory/types"
 )
 
 type BuildingRouteManager struct {
@@ -28,6 +30,13 @@ func (rm *BuildingRouteManager) RoutesBuilding() map[string]http.HandlerFunc {
 }
 
 func (rm *BuildingRouteManager) Create(w http.ResponseWriter, r *http.Request) {
+	var createRequest types.NewBuildingRequest
+	json.NewDecoder(r.Body).Decode(&createRequest)
+	building, err := rm.service.Create(createRequest)
+	if err != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(building)
 }
 
 func (rm *BuildingRouteManager) Add(w http.ResponseWriter, r *http.Request) {
