@@ -32,6 +32,7 @@ func (s SharingStatus) String() string {
 
 //
 type RoomSharing struct {
+	Id            string        `json:"id" bson:"id"`
 	BuildingId    string        `json:"buildingId" bson:"buildingId"`
 	RoomNo        int           `json:"roomNo" bson:"roomNo"`
 	SharingStatus SharingStatus `json:"sharingStatus" bson:"sharingStatus"`
@@ -56,15 +57,18 @@ func (s OccStatus) String() string {
 
 //
 type BuildingBed struct {
+	Id              string    `json:"id" bson:"id"`
 	BuildingId      string    `json:"buildingId" bson:"buildingId"`
 	BedId           string    `json:"bedId" bson:"bedId"`
 	Floor           int       `json:"floor" bson:"floor"`
 	RoomNo          int       `json:"roomNo" bson:"roomNo"`
+	BedNo           int       `json:"bedNo" bson:"bedNo"`
 	OccupancyStatus OccStatus `json:"occupancyStatus" bson:"occupancyStatus"`
 }
 
 //
 type BedUser struct {
+	Id     string `json:"id" bson:"id"`
 	BedId  string `json:"bedId" bson:"bedId"`
 	UserId string `json:"userId" bson:"userId"`
 }
@@ -91,13 +95,13 @@ func (s Status) String() string {
 
 //
 type Machine struct {
-	Name   string `json:"name" bson:"name"`
-	No     int    `json:"id" bson:"id"`
-	Status Status `json:"status" bson:"status"`
+	Name string `json:"name" bson:"name"`
+	No   string `json:"id" bson:"id"`
 }
 
 //
 type Usage struct {
+	Id        string `json:"id" bson:"id"`
 	MachineId string `json:"machineId" bson:"machineId"`
 	BedId     string `json:"bedId" bson:"bedId"`
 	Status    Status `json:"status" bson:"status"`

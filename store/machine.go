@@ -1,6 +1,7 @@
 package store
 
 import (
+	"github.com/atulanand206/inventory/mapper"
 	"github.com/atulanand206/inventory/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,8 +12,9 @@ type machineStore struct {
 }
 
 type MachineStore interface {
-	Create(machine types.Machine) error
+	CreateMachines(machine []types.Machine) error
 	GetMachines() ([]types.Machine, error)
+	GetMachine(id string) (types.Machine, error)
 	UpdateMachine(machine types.Machine) ([]types.Machine, error)
 }
 
@@ -22,8 +24,8 @@ func NewMachineStore(config StoreConfig) MachineStore {
 	}
 }
 
-func (ms *machineStore) Create(machine types.Machine) error {
-	return ms.Client.Create(machine, ms.Collection)
+func (ms *machineStore) CreateMachines(machines []types.Machine) error {
+	return ms.Client.CreateMany(mapper.MapMachinesToInterface(machines), ms.Collection)
 }
 
 func (ms *machineStore) GetMachines() ([]types.Machine, error) {
@@ -32,6 +34,18 @@ func (ms *machineStore) GetMachines() ([]types.Machine, error) {
 		return nil, err
 	}
 	return ms.decodeMachines(cursor)
+}
+
+func (ms *machineStore) GetMachine(id string) (raw types.Machine, err error) {
+	doc, err := ms.Client.FindOne(ms.Collection, bson.M{"id": id}, &options.FindOneOptions{})
+	if err != nil {
+		return
+	}
+	raw, err = ms.decodeMachine(doc)
+	if err != nil {
+		return
+	}
+	return
 }
 
 func (ms *machineStore) UpdateMachine(machine types.Machine) ([]types.Machine, error) {
@@ -51,5 +65,10 @@ func (m *machineStore) decodeMachines(cursor []bson.Raw) (scopes []types.Machine
 		}
 		scopes = append(scopes, scope)
 	}
+	return
+}
+
+func (m *machineStore) decodeMachine(doc bson.Raw) (scope types.Machine, err error) {
+	err = bson.Unmarshal(doc, &scope)
 	return
 }

@@ -5,6 +5,10 @@ type NewBuildingRequest struct {
 	Rooms map[int]int `json:"rooms"`
 }
 
+type GetUsersForBuildingRequest struct {
+	BuildingId string `json:"buildingId"`
+}
+
 type NewAddUserRequest struct {
 	BuildingId    string        `json:"buildingId"`
 	UserId        string        `json:"userId"`
@@ -21,5 +25,8 @@ type NewRemoveUserRequest struct {
 type MarkMachineRequest struct {
 	MachineId string `json:"machineId"`
 	UserId    string `json:"userId"`
-	Status    Status `json:"status"`
+}
+
+type CreateMachinesRequest struct {
+	Names []string `json:"names"`
 }

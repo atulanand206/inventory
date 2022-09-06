@@ -22,17 +22,18 @@ func NewMachineRouteManager(machineConfig store.StoreConfig, routeManager *Route
 }
 
 func (rm *MachineRouteManager) RoutesMachine() map[string]http.HandlerFunc {
-	var routes = make(map[string]http.HandlerFunc)
+	routes := make(map[string]http.HandlerFunc)
 	routes["/machines/init"] = rm.handler.postChain.Handler(rm.CreateMachines)
 	routes["/machines"] = rm.handler.postChain.Handler(rm.GetMachines)
 	routes["/machines/mark"] = rm.handler.postChain.Handler(rm.MarkMachine)
+	routes["/machines/unmark"] = rm.handler.postChain.Handler(rm.UnMarkMachine)
 	return routes
 }
 
 func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Request) {
-	var machines []types.Machine
-	json.NewDecoder(r.Body).Decode(&machines)
-	rm.service.CreateMachines(machines)
+	var requests types.CreateMachinesRequest
+	json.NewDecoder(r.Body).Decode(&requests)
+	rm.service.CreateMachines(requests)
 	machines, err := rm.service.GetMachines()
 	if err != nil {
 		return
@@ -49,9 +50,20 @@ func (rm *MachineRouteManager) GetMachines(w http.ResponseWriter, r *http.Reques
 }
 
 func (rm *MachineRouteManager) MarkMachine(w http.ResponseWriter, r *http.Request) {
-	var machine types.Machine
+	var machine types.MarkMachineRequest
 	json.NewDecoder(r.Body).Decode(&machine)
 	rm.service.MarkMachine(machine)
+	machines, err := rm.service.GetMachines()
+	if err != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(machines)
+}
+
+func (rm *MachineRouteManager) UnMarkMachine(w http.ResponseWriter, r *http.Request) {
+	var machine types.MarkMachineRequest
+	json.NewDecoder(r.Body).Decode(&machine)
+	rm.service.UnMarkMachine(machine)
 	machines, err := rm.service.GetMachines()
 	if err != nil {
 		return
