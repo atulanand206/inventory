@@ -7,6 +7,11 @@ type User struct {
 	Phone string `json:"phone" bson:"phone"`
 }
 
+type BedAccess struct {
+	BedId string `json:"bedId" bson:"bedId"`
+	Code  string `json:"code" bson:"code"`
+}
+
 //
 type Building struct {
 	Id   string `json:"id" bson:"id"`

@@ -33,8 +33,6 @@ func (rm *BuildingRouteManager) RoutesBuilding() map[string]http.HandlerFunc {
 	routes["/buildings/init"] = rm.handler.postChain.Handler(rm.Create)
 	routes["/buildings/layout"] = rm.handler.postChain.Handler(rm.GetLayout)
 	routes["/buildings/users"] = rm.handler.postChain.Handler(rm.GetUsers)
-	routes["/buildings/users/add"] = rm.handler.postChain.Handler(rm.AddUser)
-	routes["/buildings/users/remove"] = rm.handler.postChain.Handler(rm.RemoveUser)
 	return routes
 }
 
@@ -74,24 +72,4 @@ func (rm *BuildingRouteManager) GetUsers(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	json.NewEncoder(w).Encode(users)
-}
-
-func (rm *BuildingRouteManager) AddUser(w http.ResponseWriter, r *http.Request) {
-	var addRequest types.NewAddUserRequest
-	json.NewDecoder(r.Body).Decode(&addRequest)
-	bedUser, err := rm.service.AddUser(addRequest)
-	if err != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(bedUser)
-}
-
-func (rm *BuildingRouteManager) RemoveUser(w http.ResponseWriter, r *http.Request) {
-	var removeRequest types.NewRemoveUserRequest
-	json.NewDecoder(r.Body).Decode(&removeRequest)
-	bedUser, err := rm.service.RemoveUser(removeRequest)
-	if err != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(bedUser)
 }
