@@ -14,10 +14,10 @@ type MachineRouteManager struct {
 	service core.MachineService
 }
 
-func NewMachineRouteManager(machineConfig, usageConfig store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
+func NewMachineRouteManager(machineConfig, usageConfig, bedUserConfig store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
 	return &MachineRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewMachineService(machineConfig, usageConfig),
+		service:      core.NewMachineService(machineConfig, usageConfig, bedUserConfig),
 	}
 }
 

@@ -106,3 +106,10 @@ type Usage struct {
 	BedId     string `json:"bedId" bson:"bedId"`
 	Status    Status `json:"status" bson:"status"`
 }
+
+type MachineUsage struct {
+	Id     string `json:"machineId" bson:"machineId"`
+	Name   string `json:"name" bson:"name"`
+	Status Status `json:"status" bson:"status"`
+	BedId  string `json:"bedId" bson:"bedId"`
+}
