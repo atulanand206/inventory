@@ -14,20 +14,36 @@ type BuildingRouteManager struct {
 	service core.BuildingService
 }
 
-func NewBuildingRouteManager(buildingConfig store.StoreConfig, userConfig store.StoreConfig, routeManager *RouteManager) *BuildingRouteManager {
+func NewBuildingRouteManager(
+	bedUserConfig,
+	buildingBedConfig,
+	buildingConfig,
+	roomSharingConfig,
+	userConfig store.StoreConfig,
+	routeManager *RouteManager) *BuildingRouteManager {
 	return &BuildingRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewBuildingService(buildingConfig, userConfig),
+		service:      core.NewBuildingService(bedUserConfig, buildingBedConfig, buildingConfig, roomSharingConfig, userConfig),
 	}
 }
 
 func (rm *BuildingRouteManager) RoutesBuilding() map[string]http.HandlerFunc {
 	var routes = make(map[string]http.HandlerFunc)
+	routes["/buildings"] = rm.handler.postChain.Handler(rm.GetBuildings)
 	routes["/buildings/init"] = rm.handler.postChain.Handler(rm.Create)
+	routes["/buildings/layout"] = rm.handler.postChain.Handler(rm.GetLayout)
 	routes["/buildings/users"] = rm.handler.postChain.Handler(rm.GetUsers)
 	routes["/buildings/users/add"] = rm.handler.postChain.Handler(rm.AddUser)
 	routes["/buildings/users/remove"] = rm.handler.postChain.Handler(rm.RemoveUser)
 	return routes
+}
+
+func (rm *BuildingRouteManager) GetBuildings(w http.ResponseWriter, r *http.Request) {
+	buildings, err := rm.service.GetBuildings()
+	if err != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(buildings)
 }
 
 func (rm *BuildingRouteManager) Create(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +54,16 @@ func (rm *BuildingRouteManager) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(building)
+}
+
+func (rm *BuildingRouteManager) GetLayout(w http.ResponseWriter, r *http.Request) {
+	var request types.GetLayoutRequest
+	json.NewDecoder(r.Body).Decode(&request)
+	layout, err := rm.service.GetBuildingLayout(request.BuildingId)
+	if err != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(layout)
 }
 
 func (rm *BuildingRouteManager) GetUsers(w http.ResponseWriter, r *http.Request) {

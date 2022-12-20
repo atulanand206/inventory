@@ -1,6 +1,8 @@
 package mapper
 
 import (
+	"strconv"
+
 	"github.com/atulanand206/inventory/types"
 	"github.com/google/uuid"
 )
@@ -47,13 +49,14 @@ func MapBuildingBedsToInterface(buildingBeds []types.BuildingBed) []interface{} 
 	return buildingBedInterface
 }
 
-func MapCreateRoomShares(buildingId string, rooms map[int]int) []types.RoomSharing {
+func MapCreateRoomShares(buildingId string, rooms map[string]int) []types.RoomSharing {
 	var roomShares []types.RoomSharing
 	for id, room := range rooms {
+		flr, _ := strconv.Atoi(id)
 		for i := 1; i <= room; i++ {
 			roomShares = append(roomShares, types.RoomSharing{
 				Id:            RandomUUId(),
-				RoomNo:        RoomNo(id, i),
+				RoomNo:        RoomNo(flr, i),
 				BuildingId:    buildingId,
 				SharingStatus: types.Double,
 			})

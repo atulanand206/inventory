@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/atulanand206/inventory/mapper"
 	"github.com/atulanand206/inventory/store"
@@ -18,16 +19,26 @@ type buildingService struct {
 
 type BuildingService interface {
 	Create(request types.NewBuildingRequest) (types.Building, error)
+	GetBuildings() ([]types.Building, error)
 	AddUser(request types.NewAddUserRequest) (types.BedUser, error)
 	RemoveUser(request types.NewRemoveUserRequest) (types.BedUser, error)
 	GetUsers(buildingId string) ([]types.User, error)
 	GetBedUsers(buildingId string) ([]types.BedUser, error)
+	GetBuildingLayout(buildingId string) ([]types.BuildingBed, error)
 }
 
-func NewBuildingService(buildingConfig store.StoreConfig, userConfig store.StoreConfig) BuildingService {
+func NewBuildingService(
+	bedUserConfig,
+	buildingBedConfig,
+	buildingConfig,
+	roomSharingConfig,
+	userConfig store.StoreConfig) BuildingService {
 	return &buildingService{
-		buildingStore: store.NewBuildingStore(buildingConfig),
-		userStore:     store.NewUserStore(userConfig),
+		bedUserStore:     store.NewBedUserStore(bedUserConfig),
+		buildingStore:    store.NewBuildingStore(buildingConfig),
+		buildingBedStore: store.NewBuildingBedStore(buildingBedConfig),
+		roomSharingStore: store.NewRoomSharingStore(roomSharingConfig),
+		userStore:        store.NewUserStore(userConfig),
 	}
 }
 
@@ -48,6 +59,10 @@ func (m *buildingService) Create(request types.NewBuildingRequest) (types.Buildi
 		return building, err
 	}
 	return building, nil
+}
+
+func (m *buildingService) GetBuildings() ([]types.Building, error) {
+	return m.buildingStore.GetBuildings()
 }
 
 func (m *buildingService) AddUser(request types.NewAddUserRequest) (types.BedUser, error) {
@@ -91,8 +106,10 @@ func (m *buildingService) GetUsers(buildingId string) ([]types.User, error) {
 	if err != nil {
 		return []types.User{}, err
 	}
+	fmt.Println(bedUsers)
 	userIds := mapper.MapBedUsersToUserIds(bedUsers)
 	users, err := m.userStore.GetUsers(userIds)
+	fmt.Println(users)
 	if err != nil {
 		return []types.User{}, err
 	}
@@ -104,10 +121,17 @@ func (m *buildingService) GetBedUsers(buildingId string) ([]types.BedUser, error
 	if err != nil {
 		return []types.BedUser{}, err
 	}
+	fmt.Println(buildingBeds)
 	bedIds := mapper.MapBuildingBedsToBedIds(buildingBeds)
+	fmt.Println(bedIds)
 	bedUsers, err := m.bedUserStore.GetUsersByBedIds(bedIds)
+	fmt.Println(bedUsers)
 	if err != nil {
 		return []types.BedUser{}, err
 	}
 	return bedUsers, nil
+}
+
+func (m *buildingService) GetBuildingLayout(buildingId string) ([]types.BuildingBed, error) {
+	return m.buildingBedStore.GetBedsByBuildingId(buildingId)
 }

@@ -19,9 +19,10 @@ type MachineService interface {
 	UnMarkMachine(machine types.MarkMachineRequest) ([]types.Machine, error)
 }
 
-func NewMachineService(machineConfig store.StoreConfig) MachineService {
+func NewMachineService(machineConfig, usageConfig store.StoreConfig) MachineService {
 	return &machineService{
 		machineStore: store.NewMachineStore(machineConfig),
+		usageStore:   store.NewUsageStore(usageConfig),
 	}
 }
 

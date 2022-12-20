@@ -95,8 +95,8 @@ func (s Status) String() string {
 
 //
 type Machine struct {
-	Name string `json:"name" bson:"name"`
-	No   string `json:"id" bson:"id"`
+	Name string `json:"name" bson:"name,unique"`
+	No   string `json:"id" bson:"_id"`
 }
 
 //

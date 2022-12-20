@@ -1,8 +1,12 @@
 package types
 
 type NewBuildingRequest struct {
-	Name  string      `json:"name"`
-	Rooms map[int]int `json:"rooms"`
+	Name  string         `json:"name"`
+	Rooms map[string]int `json:"rooms"`
+}
+
+type GetLayoutRequest struct {
+	BuildingId string `json:"buildingId"`
 }
 
 type GetUsersForBuildingRequest struct {
