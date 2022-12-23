@@ -71,6 +71,16 @@ type BuildingBed struct {
 	OccupancyStatus OccStatus `json:"occupancyStatus" bson:"occupancyStatus"`
 }
 
+type BuildingLayout struct {
+	BuildingId string                                     `json:"buildingId" bson:"buildingId"`
+	Layout     map[string]map[string]map[string]BedLayout `json:"layout" bson:"layout"`
+}
+
+type BedLayout struct {
+	BedId  string `json:"bedId" bson:"bedId"`
+	UserId string `json:"userId" bson:"userId"`
+}
+
 //
 type BedUser struct {
 	Id     string `json:"id" bson:"id"`

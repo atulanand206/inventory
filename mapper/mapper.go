@@ -91,6 +91,25 @@ func MapCreateBedUser(request types.NewAddUserRequest) types.BedUser {
 	}
 }
 
+func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed) types.BuildingLayout {
+	var buildingLayout types.BuildingLayout
+	for _, bed := range buildingBeds {
+		if buildingLayout.Layout == nil {
+			buildingLayout.Layout = make(map[string]map[string]map[string]types.BedLayout)
+		}
+		if _, ok := buildingLayout.Layout[strconv.Itoa(bed.Floor)]; !ok {
+			buildingLayout.Layout[strconv.Itoa(bed.Floor)] = make(map[string]map[string]types.BedLayout)
+		}
+		if _, ok := buildingLayout.Layout[strconv.Itoa(bed.Floor)][strconv.Itoa(bed.RoomNo)]; !ok {
+			buildingLayout.Layout[strconv.Itoa(bed.Floor)][strconv.Itoa(bed.RoomNo)] = make(map[string]types.BedLayout)
+		}
+		var bedLayout types.BedLayout
+		bedLayout.BedId = bed.BedId
+		buildingLayout.Layout[strconv.Itoa(bed.Floor)][strconv.Itoa(bed.RoomNo)][strconv.Itoa(bed.BedNo)] = bedLayout
+	}
+	return buildingLayout
+}
+
 func MapBuildingBedsToBedIds(buildingBeds []types.BuildingBed) []string {
 	var userIds []string
 	for _, bed := range buildingBeds {

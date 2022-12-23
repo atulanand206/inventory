@@ -21,7 +21,7 @@ type BuildingService interface {
 	GetBuildings() ([]types.Building, error)
 	GetUsers(buildingId string) ([]types.User, error)
 	GetBedUsers(buildingId string) ([]types.BedUser, error)
-	GetBuildingLayout(buildingId string) ([]types.BuildingBed, error)
+	GetBuildingLayout(buildingId string) (types.BuildingLayout, error)
 }
 
 func NewBuildingService(
@@ -93,6 +93,11 @@ func (m *buildingService) GetBedUsers(buildingId string) ([]types.BedUser, error
 	return bedUsers, nil
 }
 
-func (m *buildingService) GetBuildingLayout(buildingId string) ([]types.BuildingBed, error) {
-	return m.buildingBedStore.GetBedsByBuildingId(buildingId)
+func (m *buildingService) GetBuildingLayout(buildingId string) (types.BuildingLayout, error) {
+	beds, err := m.buildingBedStore.GetBedsByBuildingId(buildingId)
+	if err != nil {
+		return types.BuildingLayout{}, err
+	}
+	layout := mapper.MapBuildingBedsToBuildingLayout(beds)
+	return layout, nil
 }
