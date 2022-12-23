@@ -149,6 +149,15 @@ func MapBuildingBedsToBedIds(buildingBeds []types.BuildingBed) []string {
 	return userIds
 }
 
+func MapToUsage(machineId string, bedId string, status types.Status) types.Usage {
+	return types.Usage{
+		Id:        RandomUUId(),
+		MachineId: machineId,
+		BedId:     bedId,
+		Status:    status,
+	}
+}
+
 func MapBedUsersToUserIds(bedUsers []types.BedUser) []string {
 	var userIds []string
 	for _, user := range bedUsers {

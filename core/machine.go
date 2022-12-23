@@ -74,14 +74,14 @@ func (m *machineService) MarkMachine(req types.MarkMachineRequest) error {
 		return errors.New("user not found in any bed")
 	}
 	usage, err := m.usageStore.GetByMachineId(req.MachineId)
-	if err != nil {
-		if bedUser.UserId == req.UserId {
+	if err == nil {
+		if bedUser.BedId == usage.BedId {
 			return errors.New("machine already in use by requested user")
 		}
 		return errors.New("machine already in use by another user")
 	}
-	usage.Status = types.Busy
-	return m.usageStore.SaveUsage(usage)
+	usage = mapper.MapToUsage(req.MachineId, bedUser.BedId, types.Busy)
+	return m.usageStore.Create(usage)
 }
 
 func (m *machineService) UnMarkMachine(req types.MarkMachineRequest) error {
@@ -93,7 +93,7 @@ func (m *machineService) UnMarkMachine(req types.MarkMachineRequest) error {
 	if err != nil {
 		return errors.New("machine not in use")
 	}
-	if bedUser.UserId != req.UserId {
+	if bedUser.BedId != usage.BedId {
 		return errors.New("machine in use by another user, can't unmark")
 	}
 	return m.usageStore.DeleteUsage(usage.MachineId)

@@ -1,8 +1,6 @@
 package core
 
 import (
-	"fmt"
-
 	"github.com/atulanand206/inventory/mapper"
 	"github.com/atulanand206/inventory/store"
 	"github.com/atulanand206/inventory/types"
@@ -67,10 +65,8 @@ func (m *buildingService) GetUsers(buildingId string) ([]types.User, error) {
 	if err != nil {
 		return []types.User{}, err
 	}
-	fmt.Println(bedUsers)
 	userIds := mapper.MapBedUsersToUserIds(bedUsers)
 	users, err := m.userStore.GetUsers(userIds)
-	fmt.Println(users)
 	if err != nil {
 		return []types.User{}, err
 	}
@@ -82,11 +78,8 @@ func (m *buildingService) GetBedUsers(buildingId string) ([]types.BedUser, error
 	if err != nil {
 		return []types.BedUser{}, err
 	}
-	fmt.Println(buildingBeds)
 	bedIds := mapper.MapBuildingBedsToBedIds(buildingBeds)
-	fmt.Println(bedIds)
 	bedUsers, err := m.bedUserStore.GetUsersByBedIds(bedIds)
-	fmt.Println(bedUsers)
 	if err != nil {
 		return []types.BedUser{}, err
 	}
