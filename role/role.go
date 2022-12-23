@@ -23,6 +23,20 @@ func (r Role) String() string {
 	return "unknown"
 }
 
+func fromRoleString(role string) Role {
+	switch role {
+	case "Admin":
+		return Admin
+	case "Manager":
+		return Manager
+	case "Staff":
+		return Staff
+	case "Customer":
+		return Customer
+	}
+	return -1
+}
+
 type Scope struct {
 	Scopes []string `json:"scopes" bson:"scopes"`
 }
@@ -168,7 +182,8 @@ func CustomerCapabilities() []string {
 	}
 }
 
-func HasCapability(role Role, capability Capability) bool {
+func HasCapability(roleString string, capability Capability) bool {
+	role := fromRoleString(roleString)
 	for _, c := range Capabilities(role).Scopes {
 		if c == capability.String() {
 			return true

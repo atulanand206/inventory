@@ -103,6 +103,7 @@ func MapUserToResponse(user types.User) types.UserResponse {
 		Name:     user.Name,
 		Username: user.Username,
 		Phone:    user.Phone,
+		Role:     user.Role,
 	}
 }
 

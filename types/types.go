@@ -39,10 +39,11 @@ type ResetPasswordRequest struct {
 }
 
 type UserResponse struct {
-	Id       string `json:"id" bson:"_id"`
-	Username string `json:"username" bson:"username"`
-	Name     string `json:"name" bson:"name"`
-	Phone    string `json:"phone" bson:"phone"`
+	Id       string    `json:"id" bson:"_id"`
+	Username string    `json:"username" bson:"username"`
+	Name     string    `json:"name" bson:"name"`
+	Phone    string    `json:"phone" bson:"phone"`
+	Role     role.Role `json:"role" bson:"role"`
 }
 
 type BedAccess struct {

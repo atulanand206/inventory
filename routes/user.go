@@ -4,20 +4,17 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/atulanand206/inventory/core"
-	"github.com/atulanand206/inventory/store"
+	"github.com/atulanand206/inventory/role"
 	"github.com/atulanand206/inventory/types"
 )
 
 type UserRouteManager struct {
 	RouteManager
-	service core.UserService
 }
 
-func NewUserRouteManager(userConfig store.StoreConfig, routeManager *RouteManager) *UserRouteManager {
+func NewUserRouteManager(routeManager *RouteManager) *UserRouteManager {
 	return &UserRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewUserService(store.NewUserStore(userConfig)),
 	}
 }
 
@@ -32,9 +29,10 @@ func (rm *UserRouteManager) RoutesUser() map[string]http.HandlerFunc {
 }
 
 func (rm *UserRouteManager) Create(w http.ResponseWriter, r *http.Request) {
+	rm.AssertRole(r, role.User_Create)
 	var createRequest types.CreateUserRequest
 	json.NewDecoder(r.Body).Decode(&createRequest)
-	user, err := rm.service.CreateUser(createRequest)
+	user, err := rm.userService.CreateUser(createRequest)
 	if err != nil {
 		return
 	}
@@ -42,9 +40,10 @@ func (rm *UserRouteManager) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rm *UserRouteManager) GetUser(w http.ResponseWriter, r *http.Request) {
+	rm.AssertRole(r, role.User_Get)
 	var request types.GetUserRequest
 	json.NewDecoder(r.Body).Decode(&request)
-	user, err := rm.service.GetUser(request.Username)
+	user, err := rm.userService.GetUser(request.Username)
 	if err != nil {
 		return
 	}
@@ -52,9 +51,10 @@ func (rm *UserRouteManager) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rm *UserRouteManager) GetUsers(w http.ResponseWriter, r *http.Request) {
+	rm.AssertRole(r, role.User_Get)
 	var request types.GetUsersRequest
 	json.NewDecoder(r.Body).Decode(&request)
-	users, err := rm.service.GetUsers(request.Usernames)
+	users, err := rm.userService.GetUsers(request.Usernames)
 	if err != nil {
 		return
 	}
@@ -64,18 +64,20 @@ func (rm *UserRouteManager) GetUsers(w http.ResponseWriter, r *http.Request) {
 func (rm *UserRouteManager) Login(w http.ResponseWriter, r *http.Request) {
 	var loginRequest types.LoginRequest
 	json.NewDecoder(r.Body).Decode(&loginRequest)
-	user, err := rm.service.LoginUser(loginRequest)
+	user, err := rm.userService.LoginUser(loginRequest)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
+	token := rm.CreateToken(user)
+	w.Header().Set("Authorization", token)
 	json.NewEncoder(w).Encode(user)
 }
 
 func (rm *UserRouteManager) Reset(w http.ResponseWriter, r *http.Request) {
 	var resetRequest types.ResetPasswordRequest
 	json.NewDecoder(r.Body).Decode(&resetRequest)
-	err := rm.service.ResetPassword(resetRequest)
+	err := rm.userService.ResetPassword(resetRequest)
 	if err != nil {
 		return
 	}
