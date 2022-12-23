@@ -1,12 +1,15 @@
 package types
 
+import "github.com/atulanand206/inventory/role"
+
 //
 type User struct {
-	Id       string `json:"id" bson:"_id"`
-	Username string `json:"username" bson:"username"`
-	Name     string `json:"name" bson:"name"`
-	Phone    string `json:"phone" bson:"phone"`
-	Token    string `json:"token" bson:"token"`
+	Id       string    `json:"id" bson:"_id"`
+	Username string    `json:"username" bson:"username"`
+	Name     string    `json:"name" bson:"name"`
+	Phone    string    `json:"phone" bson:"phone"`
+	Token    string    `json:"token" bson:"token"`
+	Role     role.Role `json:"role" bson:"role"`
 }
 
 type CreateUserRequest struct {
