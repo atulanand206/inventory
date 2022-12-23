@@ -2,9 +2,44 @@ package types
 
 //
 type User struct {
-	Id    string `json:"id" bson:"id"`
-	Name  string `json:"name" bson:"name"`
-	Phone string `json:"phone" bson:"phone"`
+	Id       string `json:"id" bson:"_id"`
+	Username string `json:"username" bson:"username"`
+	Name     string `json:"name" bson:"name"`
+	Phone    string `json:"phone" bson:"phone"`
+	Token    string `json:"token" bson:"token"`
+}
+
+type CreateUserRequest struct {
+	Username string `json:"username" bson:"username"`
+	Name     string `json:"name" bson:"name"`
+	Phone    string `json:"phone" bson:"phone"`
+	Password string `json:"password" bson:"password"`
+}
+
+type GetUserRequest struct {
+	Username string `json:"username"`
+}
+
+type GetUsersRequest struct {
+	Usernames []string `json:"usernames"`
+}
+
+type LoginRequest struct {
+	Username string `json:"username" bson:"username"`
+	Password string `json:"password" bson:"password"`
+}
+
+type ResetPasswordRequest struct {
+	Username    string `json:"username" bson:"username"`
+	OldPassword string `json:"oldPassword" bson:"oldPassword"`
+	NewPassword string `json:"newPassword" bson:"newPassword"`
+}
+
+type UserResponse struct {
+	Id       string `json:"id" bson:"_id"`
+	Username string `json:"username" bson:"username"`
+	Name     string `json:"name" bson:"name"`
+	Phone    string `json:"phone" bson:"phone"`
 }
 
 type BedAccess struct {

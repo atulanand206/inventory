@@ -21,6 +21,7 @@ func main() {
 	handle(router, buildingRouteManager.RoutesBuilding())
 	bedRouteManager := routes.NewBedRouteManager(storeConfigs["access"], storeConfigs["user"], storeConfigs["bed_user"], routeManager)
 	handle(router, bedRouteManager.RoutesBed())
+	handle(router, routes.NewUserRouteManager(storeConfigs["user"], routeManager).RoutesUser())
 	http.ListenAndServe(":"+os.Getenv("PORT"), router)
 }
 

@@ -83,6 +83,29 @@ func MapCreateBuildingBeds(roomShares []types.RoomSharing) []types.BuildingBed {
 	return buildingBeds
 }
 
+func EncryptAccessCode(password string) string {
+	return password
+}
+
+func MapCreateUser(request types.CreateUserRequest) types.User {
+	return types.User{
+		Id:       RandomUUId(),
+		Name:     request.Name,
+		Username: request.Username,
+		Phone:    request.Phone,
+		Token:    EncryptAccessCode(request.Password),
+	}
+}
+
+func MapUserToResponse(user types.User) types.UserResponse {
+	return types.UserResponse{
+		Id:       user.Id,
+		Name:     user.Name,
+		Username: user.Username,
+		Phone:    user.Phone,
+	}
+}
+
 func MapCreateBedUser(request types.NewAddUserRequest) types.BedUser {
 	return types.BedUser{
 		Id:     RandomUUId(),
