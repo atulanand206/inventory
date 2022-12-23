@@ -87,6 +87,10 @@ func (m *buildingService) GetBedUsers(buildingId string) ([]types.BedUser, error
 }
 
 func (m *buildingService) GetBuildingLayout(buildingId string) (types.BuildingLayout, error) {
+	building, err := m.buildingStore.GetById(buildingId)
+	if err != nil {
+		return types.BuildingLayout{}, err
+	}
 	beds, err := m.buildingBedStore.GetBedsByBuildingId(buildingId)
 	if err != nil {
 		return types.BuildingLayout{}, err
@@ -100,6 +104,6 @@ func (m *buildingService) GetBuildingLayout(buildingId string) (types.BuildingLa
 	for _, bedUser := range bedUsers {
 		userIds[bedUser.BedId] = bedUser.UserId
 	}
-	layout := mapper.MapBuildingBedsToBuildingLayout(beds, userIds)
+	layout := mapper.MapBuildingBedsToBuildingLayout(building, beds, userIds)
 	return layout, nil
 }

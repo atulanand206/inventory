@@ -12,6 +12,7 @@ type buildingStore struct {
 
 type BuildingStore interface {
 	Create(building types.Building) error
+	GetById(id string) (types.Building, error)
 	GetBuildings() ([]types.Building, error)
 }
 
@@ -23,6 +24,23 @@ func NewBuildingStore(config StoreConfig) BuildingStore {
 
 func (m *buildingStore) Create(building types.Building) error {
 	return m.Client.Create(building, m.Collection)
+}
+
+func (m *buildingStore) GetById(id string) (raw types.Building, err error) {
+	doc, err := m.Client.FindOne(m.Collection, bson.M{"id": id}, &options.FindOneOptions{})
+	if err != nil {
+		return
+	}
+	raw, err = m.decodeBuilding(doc)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (m *buildingStore) decodeBuilding(doc bson.Raw) (raw types.Building, err error) {
+	err = bson.Unmarshal(doc, &raw)
+	return
 }
 
 func (m *buildingStore) GetBuildings() ([]types.Building, error) {

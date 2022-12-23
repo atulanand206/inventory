@@ -113,7 +113,7 @@ func (s OccStatus) String() string {
 
 //
 type BuildingBed struct {
-	Id              string    `json:"id" bson:"id"`
+	Id              string    `json:"id" bson:"_id"`
 	BuildingId      string    `json:"buildingId" bson:"buildingId"`
 	BedId           string    `json:"bedId" bson:"bedId"`
 	Floor           int       `json:"floor" bson:"floor"`
@@ -123,8 +123,9 @@ type BuildingBed struct {
 }
 
 type BuildingLayout struct {
-	BuildingId string                                     `json:"buildingId" bson:"buildingId"`
-	Layout     map[string]map[string]map[string]BedLayout `json:"layout" bson:"layout"`
+	BuildingId   string                                     `json:"buildingId" bson:"buildingId"`
+	Layout       map[string]map[string]map[string]BedLayout `json:"layout" bson:"layout"`
+	BuildingName string                                     `json:"buildingName" bson:"buildingName"`
 }
 
 type BedLayout struct {

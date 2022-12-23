@@ -117,7 +117,7 @@ func MapCreateBedUser(request types.NewAddUserRequest) types.BedUser {
 	}
 }
 
-func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed, userIds map[string]string) types.BuildingLayout {
+func MapBuildingBedsToBuildingLayout(building types.Building, buildingBeds []types.BuildingBed, userIds map[string]string) types.BuildingLayout {
 	var buildingLayout types.BuildingLayout
 	for _, bed := range buildingBeds {
 		if buildingLayout.Layout == nil {
@@ -136,6 +136,7 @@ func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed, userIds m
 		}
 		buildingLayout.Layout[strconv.Itoa(bed.Floor)][strconv.Itoa(bed.RoomNo)][strconv.Itoa(bed.BedNo)] = bedLayout
 	}
+	buildingLayout.BuildingName = building.Name
 	return buildingLayout
 }
 
