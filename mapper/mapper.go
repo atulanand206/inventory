@@ -3,6 +3,7 @@ package mapper
 import (
 	"strconv"
 
+	"github.com/atulanand206/inventory/role"
 	"github.com/atulanand206/inventory/types"
 	"github.com/google/uuid"
 )
@@ -93,6 +94,7 @@ func MapCreateUser(request types.CreateUserRequest) types.User {
 		Name:     request.Name,
 		Username: request.Username,
 		Phone:    request.Phone,
+		Role:     role.FromRoleString(request.Role),
 		Token:    EncryptAccessCode(request.Password),
 	}
 }
@@ -115,7 +117,7 @@ func MapCreateBedUser(request types.NewAddUserRequest) types.BedUser {
 	}
 }
 
-func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed) types.BuildingLayout {
+func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed, userIds map[string]string) types.BuildingLayout {
 	var buildingLayout types.BuildingLayout
 	for _, bed := range buildingBeds {
 		if buildingLayout.Layout == nil {
@@ -129,6 +131,9 @@ func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed) types.Bui
 		}
 		var bedLayout types.BedLayout
 		bedLayout.BedId = bed.BedId
+		if ok := userIds[bed.BedId]; ok != "" {
+			bedLayout.UserId = userIds[bed.BedId]
+		}
 		buildingLayout.Layout[strconv.Itoa(bed.Floor)][strconv.Itoa(bed.RoomNo)][strconv.Itoa(bed.BedNo)] = bedLayout
 	}
 	return buildingLayout
@@ -137,9 +142,9 @@ func MapBuildingBedsToBuildingLayout(buildingBeds []types.BuildingBed) types.Bui
 func MapBuildingBedsToBedIds(buildingBeds []types.BuildingBed) []string {
 	var userIds []string
 	for _, bed := range buildingBeds {
-		if bed.OccupancyStatus == types.Occupied {
-			userIds = append(userIds, bed.BedId)
-		}
+		// if bed.OccupancyStatus == types.Occupied {
+		userIds = append(userIds, bed.BedId)
+		// }
 	}
 	return userIds
 }

@@ -23,7 +23,7 @@ func (r Role) String() string {
 	return "unknown"
 }
 
-func fromRoleString(role string) Role {
+func FromRoleString(role string) Role {
 	switch role {
 	case "Admin":
 		return Admin
@@ -183,7 +183,7 @@ func CustomerCapabilities() []string {
 }
 
 func HasCapability(roleString string, capability Capability) bool {
-	role := fromRoleString(roleString)
+	role := FromRoleString(roleString)
 	for _, c := range Capabilities(role).Scopes {
 		if c == capability.String() {
 			return true

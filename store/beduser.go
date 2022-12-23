@@ -14,6 +14,7 @@ type BedUserStore interface {
 	CreateBedUser(bedUser types.BedUser) error
 	GetBed(bedId string) (types.BedUser, error)
 	GetBedUserByUserId(userId string) (types.BedUser, error)
+	GetByBuildingId(buildingId string) ([]types.BedUser, error)
 	GetUsersByBedIds(bedIds []string) ([]types.BedUser, error)
 	DeleteBedUser(bedUser types.BedUser) error
 }
@@ -46,6 +47,18 @@ func (m *bedUserStore) GetBedUserByUserId(userId string) (raw types.BedUser, err
 		return
 	}
 	raw, err = m.decodeBedUser(doc)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (m *bedUserStore) GetByBuildingId(buildingId string) (bedUsers []types.BedUser, err error) {
+	docs, err := m.Client.Find(m.Collection, bson.M{"buildingId": buildingId}, &options.FindOptions{})
+	if err != nil {
+		return
+	}
+	bedUsers, err = m.decodeBedUsers(docs)
 	if err != nil {
 		return
 	}

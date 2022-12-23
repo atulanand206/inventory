@@ -1,6 +1,7 @@
 package store
 
 import (
+	"github.com/atulanand206/inventory/role"
 	"github.com/atulanand206/inventory/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,6 +17,7 @@ type UserStore interface {
 	GetByUsername(username string) (types.User, error)
 	GetUsers(ids []string) ([]types.User, error)
 	GetByUsernames(usernames []string) ([]types.User, error)
+	GetByRole(role role.Role) ([]types.User, error)
 	UpdateUser(user types.User) error
 }
 
@@ -63,6 +65,14 @@ func (m *userStore) GetUsers(ids []string) (scopes []types.User, err error) {
 
 func (m *userStore) GetByUsernames(usernames []string) (scopes []types.User, err error) {
 	cursor, err := m.Client.Find(m.Collection, bson.M{"username": bson.M{"$in": usernames}}, &options.FindOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return m.decodeUsers(cursor)
+}
+
+func (m *userStore) GetByRole(role role.Role) (scopes []types.User, err error) {
+	cursor, err := m.Client.Find(m.Collection, bson.M{"role": role}, &options.FindOptions{})
 	if err != nil {
 		return nil, err
 	}

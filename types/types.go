@@ -17,6 +17,7 @@ type CreateUserRequest struct {
 	Name     string `json:"name" bson:"name"`
 	Phone    string `json:"phone" bson:"phone"`
 	Password string `json:"password" bson:"password"`
+	Role     string `json:"role" bson:"role"`
 }
 
 type GetUserRequest struct {
@@ -32,6 +33,11 @@ type LoginRequest struct {
 	Password string `json:"password" bson:"password"`
 }
 
+type LoginResponse struct {
+	User  UserResponse `json:"user" bson:"user"`
+	Token string       `json:"token" bson:"token"`
+}
+
 type ResetPasswordRequest struct {
 	Username    string `json:"username" bson:"username"`
 	OldPassword string `json:"oldPassword" bson:"oldPassword"`
@@ -44,6 +50,12 @@ type UserResponse struct {
 	Name     string    `json:"name" bson:"name"`
 	Phone    string    `json:"phone" bson:"phone"`
 	Role     role.Role `json:"role" bson:"role"`
+}
+
+type UserResponsePublic struct {
+	Id    string `json:"id" bson:"_id"`
+	Name  string `json:"name" bson:"name"`
+	Phone string `json:"phone" bson:"phone"`
 }
 
 type BedAccess struct {

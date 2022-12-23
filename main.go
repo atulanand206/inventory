@@ -19,7 +19,7 @@ func main() {
 	buildingRouteManager := routes.NewBuildingRouteManager(
 		storeConfigs["bed_user"], storeConfigs["building_bed"], storeConfigs["buildings"], storeConfigs["room_sharing"], storeConfigs["users"], routeManager)
 	handle(router, buildingRouteManager.RoutesBuilding())
-	bedRouteManager := routes.NewBedRouteManager(storeConfigs["access"], storeConfigs["user"], storeConfigs["bed_user"], routeManager)
+	bedRouteManager := routes.NewBedRouteManager(storeConfigs["access"], storeConfigs["user"], storeConfigs["bed_user"], storeConfigs["building_bed"], routeManager)
 	handle(router, bedRouteManager.RoutesBed())
 	handle(router, routes.NewUserRouteManager(routeManager).RoutesUser())
 	http.ListenAndServe(":"+os.Getenv("PORT"), router)

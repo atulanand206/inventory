@@ -17,11 +17,12 @@ type BedRouteManager struct {
 func NewBedRouteManager(
 	accessConfig,
 	userConfig,
-	bedUserConfig store.StoreConfig,
+	bedUserConfig,
+	buildingBedConfig store.StoreConfig,
 	routeManager *RouteManager) *BedRouteManager {
 	return &BedRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewBedService(accessConfig, userConfig, bedUserConfig),
+		service:      core.NewBedService(accessConfig, userConfig, bedUserConfig, buildingBedConfig),
 	}
 }
 

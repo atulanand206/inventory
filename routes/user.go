@@ -20,9 +20,10 @@ func NewUserRouteManager(routeManager *RouteManager) *UserRouteManager {
 
 func (rm *UserRouteManager) RoutesUser() map[string]http.HandlerFunc {
 	var routes = make(map[string]http.HandlerFunc)
-	routes["/users/init"] = rm.handler.postChain.Handler(rm.Create)
+	routes["/users/signup"] = rm.handler.postChain.Handler(rm.Create)
 	routes["/users/one"] = rm.handler.postChain.Handler(rm.GetUser)
 	routes["/users"] = rm.handler.postChain.Handler(rm.GetUsers)
+	routes["/users/customers"] = rm.handler.postChain.Handler(rm.GetCustomers)
 	routes["/users/login"] = rm.handler.postChain.Handler(rm.Login)
 	routes["/users/reset"] = rm.handler.postChain.Handler(rm.Reset)
 	return routes
@@ -61,6 +62,17 @@ func (rm *UserRouteManager) GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
+func (rm *UserRouteManager) GetCustomers(w http.ResponseWriter, r *http.Request) {
+	// rm.AssertRole(r, role.User_Get)
+	var request types.GetUsersRequest
+	json.NewDecoder(r.Body).Decode(&request)
+	users, err := rm.userService.GetCustomers()
+	if err != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(users)
+}
+
 func (rm *UserRouteManager) Login(w http.ResponseWriter, r *http.Request) {
 	var loginRequest types.LoginRequest
 	json.NewDecoder(r.Body).Decode(&loginRequest)
@@ -70,8 +82,11 @@ func (rm *UserRouteManager) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	token := rm.CreateToken(user)
-	w.Header().Set("Authorization", token)
-	json.NewEncoder(w).Encode(user)
+	response := types.LoginResponse{
+		User:  user,
+		Token: token,
+	}
+	json.NewEncoder(w).Encode(response)
 }
 
 func (rm *UserRouteManager) Reset(w http.ResponseWriter, r *http.Request) {

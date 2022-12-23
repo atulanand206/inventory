@@ -56,6 +56,7 @@ func (rm *RouteManager) CreateToken(user types.UserResponse) string {
 	jwtClaims := map[string]interface{}{
 		"username": user.Username,
 		"role":     user.Role,
+		"scopes":   role.Capabilities(user.Role),
 	}
 	expiresIn := strconv.Itoa(24 * 60 * 60)
 	token, err := net.CreateToken(jwtClaims, rm.ClientSecret(), expiresIn)

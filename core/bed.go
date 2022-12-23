@@ -9,9 +9,10 @@ import (
 )
 
 type bedService struct {
-	accessStore  store.AccessStore
-	userStore    store.UserStore
-	bedUserStore store.BedUserStore
+	accessStore      store.AccessStore
+	userStore        store.UserStore
+	bedUserStore     store.BedUserStore
+	buildingBedStore store.BuildingBedStore
 }
 
 type BedService interface {
@@ -25,11 +26,13 @@ type BedService interface {
 func NewBedService(
 	accessConfig,
 	userConfig,
-	bedUserConfig store.StoreConfig) BedService {
+	bedUserConfig,
+	buildingBedConfig store.StoreConfig) BedService {
 	return &bedService{
-		accessStore:  store.NewAccessStore(accessConfig),
-		userStore:    store.NewUserStore(userConfig),
-		bedUserStore: store.NewBedUserStore(bedUserConfig),
+		accessStore:      store.NewAccessStore(accessConfig),
+		userStore:        store.NewUserStore(userConfig),
+		bedUserStore:     store.NewBedUserStore(bedUserConfig),
+		buildingBedStore: store.NewBuildingBedStore(buildingBedConfig),
 	}
 }
 
@@ -59,24 +62,22 @@ func (m *bedService) GetBedUser(bedId string) (types.BedUser, error) {
 }
 
 func (m *bedService) AddUser(request types.NewAddUserRequest) (types.BedUser, error) {
-	user, err := m.userStore.GetUser(request.UserId)
+	_, err := m.userStore.GetUser(request.UserId)
 	if err != nil {
-		return types.BedUser{}, err
+		return types.BedUser{}, errors.New("user not found")
 	}
-	bed, err := m.bedUserStore.GetBed(request.BedId)
+	_, err = m.buildingBedStore.GetByBedId(request.BedId)
 	if err != nil {
-		return types.BedUser{}, err
+		return types.BedUser{}, errors.New("building bed not found")
 	}
-	if bed.UserId != "" {
+	_, err = m.bedUserStore.GetBed(request.BedId)
+	if err == nil {
 		return types.BedUser{}, errors.New("bed already occupied")
-	}
-	if bed.UserId == user.Id {
-		return types.BedUser{}, errors.New("user already in bed")
 	}
 	bedUser := mapper.MapCreateBedUser(request)
 	err = m.bedUserStore.CreateBedUser(bedUser)
 	if err != nil {
-		return bedUser, err
+		return bedUser, errors.New("failed to add user to bed")
 	}
 	return bedUser, nil
 }
