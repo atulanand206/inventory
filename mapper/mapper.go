@@ -19,8 +19,9 @@ func MapCreateMachineRequestToMachines(request types.CreateMachinesRequest) []ty
 	var machines []types.Machine
 	for _, name := range request.Names {
 		machines = append(machines, types.Machine{
-			No:   RandomUUId(),
-			Name: name,
+			No:         RandomUUId(),
+			Name:       name,
+			BuildingId: request.BuildingId,
 		})
 	}
 	return machines

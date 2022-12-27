@@ -14,7 +14,7 @@ func main() {
 	storeConfigs := store.StoreConfigs(os.Getenv("DB_NAME"), collections(), os.Getenv("LOCAL") == "true")
 	routeManager := routes.New(storeConfigs["user"])
 	router := http.NewServeMux()
-	machineRouteManager := routes.NewMachineRouteManager(storeConfigs["machines"], storeConfigs["usages"], storeConfigs["bed_user"], routeManager)
+	machineRouteManager := routes.NewMachineRouteManager(storeConfigs["machines"], storeConfigs["usages"], storeConfigs["bed_user"], storeConfigs["building_bed"], routeManager)
 	handle(router, machineRouteManager.RoutesMachine())
 	buildingRouteManager := routes.NewBuildingRouteManager(
 		storeConfigs["bed_user"], storeConfigs["building_bed"], storeConfigs["buildings"], storeConfigs["room_sharing"], storeConfigs["users"], routeManager)

@@ -13,7 +13,7 @@ type machineStore struct {
 
 type MachineStore interface {
 	CreateMachines(machine []types.Machine) error
-	GetMachines() ([]types.Machine, error)
+	GetMachines(buildingId string) ([]types.Machine, error)
 	GetMachine(id string) (types.Machine, error)
 	UpdateMachine(machine types.Machine) ([]types.Machine, error)
 }
@@ -28,8 +28,8 @@ func (ms *machineStore) CreateMachines(machines []types.Machine) error {
 	return ms.Client.CreateMany(mapper.MapMachinesToInterface(machines), ms.Collection)
 }
 
-func (ms *machineStore) GetMachines() ([]types.Machine, error) {
-	cursor, err := ms.Client.Find(ms.Collection, bson.M{}, &options.FindOptions{})
+func (ms *machineStore) GetMachines(buildingId string) ([]types.Machine, error) {
+	cursor, err := ms.Client.Find(ms.Collection, bson.M{"buildingId": buildingId}, &options.FindOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (ms *machineStore) UpdateMachine(machine types.Machine) ([]types.Machine, e
 	if err != nil {
 		return nil, err
 	}
-	return ms.GetMachines()
+	return ms.GetMachines(machine.BuildingId)
 }
 
 func (m *machineStore) decodeMachines(cursor []bson.Raw) (scopes []types.Machine, err error) {

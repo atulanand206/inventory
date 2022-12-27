@@ -14,10 +14,10 @@ type MachineRouteManager struct {
 	service core.MachineService
 }
 
-func NewMachineRouteManager(machineConfig, usageConfig, bedUserConfig store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
+func NewMachineRouteManager(machineConfig, usageConfig, bedUserConfig, buildingBedConfig store.StoreConfig, routeManager *RouteManager) *MachineRouteManager {
 	return &MachineRouteManager{
 		RouteManager: *routeManager,
-		service:      core.NewMachineService(machineConfig, usageConfig, bedUserConfig),
+		service:      core.NewMachineService(machineConfig, usageConfig, bedUserConfig, buildingBedConfig),
 	}
 }
 
@@ -31,10 +31,10 @@ func (rm *MachineRouteManager) RoutesMachine() map[string]http.HandlerFunc {
 }
 
 func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Request) {
-	var requests types.CreateMachinesRequest
-	json.NewDecoder(r.Body).Decode(&requests)
-	rm.service.CreateMachines(requests)
-	machines, err := rm.service.GetMachines()
+	var request types.CreateMachinesRequest
+	json.NewDecoder(r.Body).Decode(&request)
+	rm.service.CreateMachines(request)
+	machines, err := rm.service.GetMachines(request.BuildingId)
 	if err != nil {
 		return
 	}
@@ -42,7 +42,9 @@ func (rm *MachineRouteManager) CreateMachines(w http.ResponseWriter, r *http.Req
 }
 
 func (rm *MachineRouteManager) GetMachines(w http.ResponseWriter, r *http.Request) {
-	machines, err := rm.service.GetMachines()
+	var request types.GetMachinesRequest
+	json.NewDecoder(r.Body).Decode(&request)
+	machines, err := rm.service.GetMachines(request.BuildingId)
 	if err != nil {
 		return
 	}
@@ -53,7 +55,7 @@ func (rm *MachineRouteManager) MarkMachine(w http.ResponseWriter, r *http.Reques
 	var machine types.MarkMachineRequest
 	json.NewDecoder(r.Body).Decode(&machine)
 	rm.service.MarkMachine(machine)
-	machines, err := rm.service.GetMachines()
+	machines, err := rm.service.GetMachines(machine.BuildingId)
 	if err != nil {
 		return
 	}
@@ -64,7 +66,7 @@ func (rm *MachineRouteManager) UnMarkMachine(w http.ResponseWriter, r *http.Requ
 	var machine types.MarkMachineRequest
 	json.NewDecoder(r.Body).Decode(&machine)
 	rm.service.UnMarkMachine(machine)
-	machines, err := rm.service.GetMachines()
+	machines, err := rm.service.GetMachines(machine.BuildingId)
 	if err != nil {
 		return
 	}

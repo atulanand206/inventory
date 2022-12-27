@@ -27,10 +27,16 @@ type NewRemoveUserRequest struct {
 }
 
 type MarkMachineRequest struct {
-	MachineId string `json:"machineId"`
-	UserId    string `json:"userId"`
+	BuildingId string `json:"buildingId"`
+	MachineId  string `json:"machineId"`
+	UserId     string `json:"userId"`
 }
 
 type CreateMachinesRequest struct {
-	Names []string `json:"names"`
+	Names      []string `json:"names"`
+	BuildingId string   `json:"buildingId"`
+}
+
+type GetMachinesRequest struct {
+	BuildingId string `json:"buildingId"`
 }

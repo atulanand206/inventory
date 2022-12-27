@@ -9,24 +9,26 @@ import (
 )
 
 type machineService struct {
-	machineStore store.MachineStore
-	usageStore   store.UsageStore
-	bedUserStore store.BedUserStore
+	machineStore     store.MachineStore
+	usageStore       store.UsageStore
+	bedUserStore     store.BedUserStore
+	buildingBedStore store.BuildingBedStore
 }
 
 type MachineService interface {
 	CreateMachines(request types.CreateMachinesRequest)
-	GetMachines() ([]types.MachineUsage, error)
+	GetMachines(buildingId string) ([]types.MachineUsage, error)
 	GetMachine(id string) (types.Machine, error)
 	MarkMachine(machine types.MarkMachineRequest) error
 	UnMarkMachine(machine types.MarkMachineRequest) error
 }
 
-func NewMachineService(machineConfig, usageConfig, bedUserConfig store.StoreConfig) MachineService {
+func NewMachineService(machineConfig, usageConfig, bedUserConfig, buildingBedConfig store.StoreConfig) MachineService {
 	return &machineService{
-		machineStore: store.NewMachineStore(machineConfig),
-		usageStore:   store.NewUsageStore(usageConfig),
-		bedUserStore: store.NewBedUserStore(bedUserConfig),
+		machineStore:     store.NewMachineStore(machineConfig),
+		usageStore:       store.NewUsageStore(usageConfig),
+		bedUserStore:     store.NewBedUserStore(bedUserConfig),
+		buildingBedStore: store.NewBuildingBedStore(buildingBedConfig),
 	}
 }
 
@@ -34,8 +36,8 @@ func (m *machineService) CreateMachines(request types.CreateMachinesRequest) {
 	m.machineStore.CreateMachines(mapper.MapCreateMachineRequestToMachines(request))
 }
 
-func (m *machineService) GetMachines() ([]types.MachineUsage, error) {
-	machines, err := m.machineStore.GetMachines()
+func (m *machineService) GetMachines(buildingId string) ([]types.MachineUsage, error) {
+	machines, err := m.machineStore.GetMachines(buildingId)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +75,13 @@ func (m *machineService) MarkMachine(req types.MarkMachineRequest) error {
 	if err != nil {
 		return errors.New("user not found in any bed")
 	}
+	buildingBed, err := m.buildingBedStore.GetByBedId(bedUser.BedId)
+	if err != nil {
+		return errors.New("bed not found in any building")
+	}
+	if buildingBed.BuildingId != req.BuildingId {
+		return errors.New("user not in requested building")
+	}
 	usage, err := m.usageStore.GetByMachineId(req.MachineId)
 	if err == nil {
 		if bedUser.BedId == usage.BedId {
@@ -88,6 +97,13 @@ func (m *machineService) UnMarkMachine(req types.MarkMachineRequest) error {
 	bedUser, err := m.bedUserStore.GetBedUserByUserId(req.UserId)
 	if err != nil {
 		return errors.New("user not found in any bed")
+	}
+	buildingBed, err := m.buildingBedStore.GetByBedId(bedUser.BedId)
+	if err != nil {
+		return errors.New("bed not found in any building")
+	}
+	if buildingBed.BuildingId != req.BuildingId {
+		return errors.New("user not in requested building")
 	}
 	usage, err := m.usageStore.GetByMachineId(req.MachineId)
 	if err != nil {
